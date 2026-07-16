@@ -2,35 +2,66 @@
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
-**Graph CV** is a high-performance, asynchronous AI application designed to evaluate, critique, and enhance resumes. By decoupling heavy LLM processing from the main application thread using a **BullMQ** message queue and **LangGraph** multi-agent pipelines, this platform ensures a seamless, non-blocking user experience even during complex document analysis.
+**Graph CV** is a high-performance, asynchronous AI platform designed for precise ATS evaluation, resume roasting, and targeted enhancements. Built to achieve **100% layout retention** of both resumes and Job Descriptions (JDs), it utilizes image-based multimodal processing to bypass traditional, error-prone text parsers. 
+
+By decoupling heavy LLM processing from the main application thread using a **BullMQ** message queue and **LangGraph** multi-agent pipelines, this platform ensures a seamless, non-blocking user experience with 99.9% task reliability.
 
 ## ✨ Core Features
 
+* **Multimodal Data Extraction:** Bypasses standard PDF parsers by uploading documents to Cloudinary as images, using the Gemini Vision API for pixel-perfect layout and context retention.
 * **Resume Roaster:** Deep-dives into document flaws, aggressively flagging vague bullet points, missing quantifiable metrics, and weak action verbs.
-* **Resume Enhancer:** Processes and rewrites specific document sections in parallel to elevate overall ATS impact and readability.
-* **ATS Evaluator:** Compares uploaded resumes against targeted Job Descriptions (JDs) to generate precise match metrics and compatibility scores.
-* **Integrated LaTeX Editor:** Empowers users to make immediate formatting and content adjustments based on AI feedback, rendering PDF changes directly in the browser.
+* **Resume Enhancer:** Processes and rewrites specific document sections in parallel using LangGraph to elevate overall ATS impact and readability.
+* **ATS Evaluator:** Compares extracted resume data against targeted Job Descriptions (JDs) to generate precise match metrics and compatibility scores via MongoDB caching.
+* **Client-Side LaTeX Editor:** Empowers users to make immediate formatting and content adjustments using an integrated **Monaco Editor**. It shifts compilation overhead entirely to the client (zero server overhead), rendering PDF changes instantly.
 
 ---
 
-## 🧠 System Architecture
+## 🏗️ System Architecture & Workflow
 
-Evaluating complex documents with LLMs synchronously often leads to API timeouts and a frozen client UI. Graph CV solves this bottleneck through a decoupled, event-driven architecture:
+GraphCV is built on a scalable, asynchronous architecture powered by the Gemini Pro API, LangGraph, MongoDB, BullMQ, and Redis. The platform processes heavy AI generation and evaluation tasks asynchronously to prevent timeouts and manage API rate limits.
 
-1. **Ingestion & Queueing:** A user uploads a resume via the React frontend. The Node.js backend immediately generates a Job ID and offloads the task to a **BullMQ** message queue, keeping the main thread free.
-2. **Document Parsing:** Background workers pick up the job. Image-based documents are extracted as raw bytes (rather than base64) to heavily optimize **Gemini API** token efficiency and processing stability.
-3. **Parallel Evaluation:** The extracted data enters a **LangGraph** multi-agent flow. Dedicated Gemini agents evaluate the *Experience*, *Projects*, and *Achievements* sections simultaneously, drastically reducing overall AI latency.
-4. **Final Judge:** A synthesis node aggregates the parallel outputs, enforces a strict JSON schema, and writes the structured feedback to the database for client retrieval.
+### Main System & Data Flow
+
+This diagram illustrates the end-to-end data flow and job lifecycle of GraphCV, from user upload to final result delivery:
+
+![GraphCV Main System Architecture](./assets/main-system-architecture.png)
+
+1. **Image Uploads (via Cloudinary APIs)**: Users upload resume and JD images, which are securely hosted on Cloudinary.
+2. **Job Creation (Queued)**: Job metadata (JOB ID, Cloudinary URLs, context) is saved to MongoDB. The JOB ID is immediately returned to the client.
+3. **Asynchronous Processing (BullMQ & Redis)**: Jobs are queued and picked up by a worker pool, decoupling the AI workload from the API response. Workers pull the secure URLs and pass the raw image data to the multi-agent orchestrator.
+4. **LangGraph AI Orchestration**: Extracted data is fed into a complex, multi-agent AI pipeline managed by LangGraph. This orchestrator routes data through multiple specialized agents (e.g., Roaster, ATS Evaluator, and the core Parallel Text Enhancers) before a **Final Judge Agent** aggregates and critiques the output.
+5. **Result Aggregation & Client Delivery**: Enhanced text and ATS scores are saved to MongoDB. The client fetches the completed job, and the final optimized resume is rendered in the Monaco Editor.
+
+---
+
+### 🚀 Deep Dive: Text Enhancer Sub-Pipeline
+
+GraphCV goes beyond simple rephrasing; it utilizes a sophisticated multi-agent pipeline to quantify impact, optimize verbs, and optimize for technical skills.
+
+![GraphCV: Text Enhancer Sub-Pipeline Drill-Down](./assets/text-enhancer-sub-pipeline.png)
+
+#### **The Enhancer Workflow:**
+
+The raw, extracted text block is passed to the **Multi-Agent Orchestrator (Gemini Pro)**, which manages three specialized agents operating in parallel:
+
+1. **Agent 1: Skill & Tool-Specific Text Enhancer (Sub-Architecture)**: Utilizes a Skill-Aware Rephraser and RAG to analyze the user's skillset, rephrasing for technical domain relevance. The result is optimized by Keyword & Level Optimization Logic.
+2. **Agent 2: Impact Quantification Agent**: Identifies key accomplishments and suggests quantifiable metrics (e.g., converting "manual to automated" into "orchestrated automated pipelines, reducing manual effort by 20+ hours/week").
+3. **Agent 3: Action Verb Optimization Agent**: Analyzes verb usage and suggests stronger, results-oriented alternatives tailored to the technical role (e.g., "worked on" -> "architected").
+
+All agent outputs are synthesized and critiqued by the **Final Judge Agent** to ensure consistency and grammar before being returned as the consolidated Enhanced Text Block.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** React.js
+* **Frontend:** React.js, Tailwind CSS v4, Monaco Editor
 * **Backend:** Node.js, Express.js
+* **Database:** MongoDB
+* **Asset Storage:** Cloudinary
 * **Queue System & State:** BullMQ, Redis
 * **AI / LLM:** Google Gemini API, LangGraph
 * **Infrastructure:** Docker (for containerized background workers)
@@ -45,7 +76,9 @@ Follow these instructions to set up and run the system on your local machine.
 
 * [Node.js](https://nodejs.org/en/) (v18 or higher)
 * Redis (Running locally or via Docker)
+* MongoDB (Local instance or MongoDB Atlas)
 * Google Gemini API Key
+* Cloudinary Account
 
 ### 1. Clone the Repository
 
