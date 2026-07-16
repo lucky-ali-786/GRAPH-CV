@@ -28,7 +28,7 @@ GraphCV is built on a scalable, asynchronous architecture powered by the Gemini 
 
 This diagram illustrates the end-to-end data flow and job lifecycle of GraphCV, from user upload to final result delivery:
 
-![GraphCV Main System Architecture](./assets/main-system-architecture.png)
+![GraphCV Main System Architecture](./assests/graphcv-architecture.png)
 
 1. **Image Uploads (via Cloudinary APIs)**: Users upload resume and JD images, which are securely hosted on Cloudinary.
 2. **Job Creation (Queued)**: Job metadata (JOB ID, Cloudinary URLs, context) is saved to MongoDB. The JOB ID is immediately returned to the client.
@@ -42,7 +42,7 @@ This diagram illustrates the end-to-end data flow and job lifecycle of GraphCV, 
 
 GraphCV goes beyond simple rephrasing; it utilizes a sophisticated multi-agent pipeline to quantify impact, optimize verbs, and optimize for technical skills.
 
-![GraphCV: Text Enhancer Sub-Pipeline Drill-Down](./assets/text-enhancer-sub-pipeline.png)
+![GraphCV: Text Enhancer Sub-Pipeline Drill-Down](./assests/text-enhancer-sub-pipeline.png)
 
 #### **The Enhancer Workflow:**
 
