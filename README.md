@@ -12,8 +12,10 @@ By decoupling heavy LLM processing from the main application thread using a **Bu
 
 ---
 
-## 🌐 Live Preview
-Experience the platform live here: **[graph-cv-frontend.vercel.app](https://graph-cv-frontend.vercel.app)**
+## 🌐 Live Links
+
+* **Frontend Application:** [graph-cv-frontend.vercel.app](https://graph-cv-frontend.vercel.app)
+* **Swagger API Documentation:** [graphcv-api.onrender.com/api-docs](https://graphcv-api.onrender.com/api-docs)
 
 ---
 
