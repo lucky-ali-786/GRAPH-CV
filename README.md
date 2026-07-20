@@ -10,6 +10,13 @@
 
 By decoupling heavy LLM processing from the main application thread using a **BullMQ** message queue and **LangGraph** multi-agent pipelines, this platform ensures a seamless, non-blocking user experience with 99.9% task reliability.
 
+---
+
+## 🌐 Live Preview
+Experience the platform live here: **[graph-cv-frontend.vercel.app](https://graph-cv-frontend.vercel.app)**
+
+---
+
 ## ✨ Core Features
 
 * **Multimodal Data Extraction:** Bypasses standard PDF parsers by uploading documents to Cloudinary as images, using the Gemini Vision API for pixel-perfect layout and context retention.
@@ -65,6 +72,18 @@ All agent outputs are synthesized and critiqued by the **Final Judge Agent** to 
 * **Queue System & State:** BullMQ, Redis
 * **AI / LLM:** Google Gemini API, LangGraph
 * **Infrastructure:** Docker (for containerized background workers)
+
+---
+
+## 🔮 Future Roadmap (Coming Soon)
+
+We are constantly iterating to make Graph CV the ultimate career engineering tool. Planned additions include:
+
+* **Robust CI/CD Pipelines:** Implementing GitHub Actions for automated linting, testing, and zero-downtime deployments to ensure production stability.
+* **Job Board Browser Extension:** A 1-click Chrome/Edge extension to instantly grab Job Descriptions directly from LinkedIn, Indeed, or YC Work at a Startup, piping them straight into the ATS Evaluator.
+* **Advanced User Analytics Dashboard:** Track ATS compatibility scores over time, visualize keyword gaps, and monitor your overall "hireability" index based on industry trends.
+* **Direct Cloud Integrations:** Seamlessly import existing resumes from Google Drive, Notion, or directly sync with your LinkedIn profile data.
+* **A/B Resume Testing:** Generate and manage multiple variations of your resume targeted at different roles (e.g., Frontend vs. Full-Stack), tracking which variation yields the highest ATS match rate.
 
 ---
 
